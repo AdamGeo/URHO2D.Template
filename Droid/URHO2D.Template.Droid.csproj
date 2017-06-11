@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BEB739A9-063A-4453-B65E-0A6471C2A36C}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>URHO2D.Template.Droid</RootNamespace>
+    <AssemblyName>URHO2D.Template.Droid</AssemblyName>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <NoStdLib>false</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <NoStdLib>false</NoStdLib>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Urho">
+      <HintPath>..\packages\UrhoSharp.1.4.47\lib\MonoAndroid\Urho.dll</HintPath>
+    </Reference>
+    <Reference Include="Urho.Droid.SdlBinding">
+      <HintPath>..\packages\UrhoSharp.1.4.47\lib\MonoAndroid\Urho.Droid.SdlBinding.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="UrhoSharpReadme.txt" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\mipmap-hdpi\Icon.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\Icon.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\Icon.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\URHO2D.Template.csproj">
+      <Project>{F5FA51A1-91E6-485B-AED1-4D55031C7C46}</Project>
+      <Name>URHO2D.Template</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\drawable\" />
+    <Folder Include="Assets\" />
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="..\Assets\Data\Fonts\Anonymous Pro.png">
+      <Link>Assets\Data\Fonts\Anonymous Pro.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Fonts\Anonymous Pro.sdf">
+      <Link>Assets\Data\Fonts\Anonymous Pro.sdf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Fonts\Anonymous Pro.ttf">
+      <Link>Assets\Data\Fonts\Anonymous Pro.ttf</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Textures\LogoLarge.png">
+      <Link>Assets\Data\Textures\LogoLarge.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Textures\UrhoIcon.png">
+      <Link>Assets\Data\Textures\UrhoIcon.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\UI\DefaultStyle.xml">
+      <Link>Assets\Data\UI\DefaultStyle.xml</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Materials\Monkey.xml">
+      <Link>Assets\Data\Materials\Monkey.xml</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Models\Player1.mdl">
+      <Link>Assets\Data\Models\Player1.mdl</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\Ball.png">
+      <Link>Assets\Data\Sprites\Ball.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\Box.png">
+      <Link>Assets\Data\Sprites\Box.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\UrhoIcon.png">
+      <Link>Assets\Data\Sprites\UrhoIcon.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\Lev1_BG.png">
+      <Link>Assets\Data\Sprites\Lev1_BG.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\Cog.png">
+      <Link>Assets\Data\Sprites\cog.png</Link>
+    </AndroidAsset>
+    <AndroidAsset Include="..\Assets\Data\Sprites\Level05.png">
+      <Link>Assets\Data\Sprites\Level05.png</Link>
+    </AndroidAsset>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="..\packages\UrhoSharp.1.4.47\build\MonoAndroid\UrhoSharp.targets" Condition="Exists('..\packages\UrhoSharp.1.4.47\build\MonoAndroid\UrhoSharp.targets')" />
+</Project>

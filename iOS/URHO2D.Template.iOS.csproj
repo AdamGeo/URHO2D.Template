@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectGuid>{63DF1F3D-61CC-43B2-B37D-DDB52A554AA1}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>URHO2D.Template.iOS</RootNamespace>
+    <AssemblyName>URHO2D.Template.iOS</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;ENABLE_TEST_CLOUD;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer: appldevacc7@gmail.com (7ZD2TBMP2U)</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <IOSDebuggerPort>30360</IOSDebuggerPort>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;ENABLE_TEST_CLOUD;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer: appldevacc7@gmail.com (7ZD2TBMP2U)</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <IOSDebuggerPort>55639</IOSDebuggerPort>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="MonoTouch.Dialog-1" />
+    <Reference Include="Urho">
+      <HintPath>..\packages\UrhoSharp.1.4.47\lib\Xamarin.iOS10\Urho.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Contents.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+    <None Include="UrhoSharpReadme.txt" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\URHO2D.Template.csproj">
+      <Project>{F5FA51A1-91E6-485B-AED1-4D55031C7C46}</Project>
+      <Name>URHO2D.Template</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="..\Assets\Data\Fonts\Anonymous Pro.png">
+      <Link>Resources\Data\Fonts\Anonymous Pro.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Fonts\Anonymous Pro.sdf">
+      <Link>Resources\Data\Fonts\Anonymous Pro.sdf</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Fonts\Anonymous Pro.ttf">
+      <Link>Resources\Data\Fonts\Anonymous Pro.ttf</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Textures\LogoLarge.png">
+      <Link>Resources\Data\Textures\LogoLarge.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Textures\UrhoIcon.png">
+      <Link>Resources\Data\Textures\UrhoIcon.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\UI\DefaultStyle.xml">
+      <Link>Resources\Data\UI\DefaultStyle.xml</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Materials\Monkey.xml">
+      <Link>Resources\Data\Materials\Monkey.xml</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Models\Player1.mdl">
+      <Link>Resources\Data\Models\Player1.mdl</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\Ball.png">
+      <Link>Resources\Data\Sprites\Ball.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\Box.png">
+      <Link>Resources\Data\Sprites\Box.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Materials\Player1D.xml">
+      <Link>Resources\Data\Materials\Player1D.xml</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Textures\Monkey.png">
+      <Link>Resources\Data\Textures\Monkey.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Textures\Player1D.png">
+      <Link>Resources\Data\Textures\Player1D.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Models\Monkey.mdl">
+      <Link>Resources\Data\Models\Monkey.mdl</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\UrhoIcon.png">
+      <Link>Resources\Data\Sprites\UrhoIcon.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\Lev1_BG.png">
+      <Link>Resources\Data\Sprites\Lev1_BG.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\Cog.png">
+      <Link>Resources\Data\Sprites\cog.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\Assets\Data\Sprites\Level05.png">
+      <Link>Resources\Data\Sprites\Level05.png</Link>
+    </BundleResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

@@ -1,0 +1,8 @@
+﻿{
+  "dependencies": {
+    "UrhoSharp": "1.4.47"
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile7": {}
+  }
+}
