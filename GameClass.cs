@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
@@ -13,32 +13,39 @@ namespace URHO2D.Template
 		Scene scene;
         bool drawDebug;
 		const uint NumObjects = 10;
-
         Vector2 touchStart;
         Vector2 touchMove;
         bool wasTap;
-
         Node pickedNode;
         RigidBody2D dummyBody;
-
 		double currentScale = 1;
 		double startScale = 1;
-		//double xOffset = 0;
-		//double yOffset = 0;
-        //double pinchScale = 0;
         double startPinchScale = 0;
         bool didZoom = false;
-
-		//uint[] vertexDuplicates;
 		readonly List<Vector3> originalVertices = new List<Vector3>();
-
         Vector2 viewportSize;
-
         Camera camera;
-
 		public GameClass(ApplicationOptions options = null) : base(options) { }
-
         static GB2ShapeCache gbcache;
+        const int k_allCategory = 0xFFFF;
+        const int CB_1 = 0x0001; //  using ^ CB_1 causes no contact with other things aswell ?!? (in cocos2d)
+		const int CB_2 = 0x0002;
+		const int CB_3 = 0x0004;
+		const int CB_4 = 0x0008;
+		const int CB_5 = 0x0010;
+		const int CB_6 = 0x0020;
+		const int CB_7 = 0x0040;
+		const int CB_TERRAIN = 0x0080;
+		const int CB_9 = 0x0100;
+		const int CB_EXIT = 0x0200;
+		const int CB_11 = 0x0400;
+		const int CB_12 = 0x0800;
+		const int CB_13 = 0x1000;
+		const int CB_14 = 0x2000;
+		const int CB_15 = 0x4000;
+		const int CB_16 = 0x8000;
+		const int k_allMaskBits           = k_allCategory;
+		const int k_allButTerrainMaskBits = k_allCategory ^ CB_TERRAIN;
 
         protected override void Start()
 		{
@@ -209,25 +216,28 @@ namespace URHO2D.Template
                     //Debug.WriteLine("wasTap && NearlyEquals");
                     wasTap = false;
 
-                    if((args.X > viewportSize.X * 0.9) && (args.Y < viewportSize.Y *0.9)) {
+                    if((args.X > viewportSize.X * 0.9) && (args.Y < viewportSize.Y *0.15)) {
 						scene.GetComponent<PhysicsWorld2D>().DrawJoint = !drawDebug;
 						drawDebug = !drawDebug;
 					}
                     else {
-						int x = RandomNumber(1, 4);
-						switch (x)
-						{
-							case 1:
-								gbcache.CreateSpriteWithNameAt("Ball", Assets.Sprites.Ball, true, wargs, scene, this);
-								break;
-							case 2:
-								gbcache.CreateSpriteWithNameAt("UrhoIcon", Assets.Sprites.UrhoIcon, true, wargs, scene, this);
-								break;
-							case 3:
-								gbcache.CreateSpriteWithNameAt("Cog", Assets.Sprites.Cog, true, wargs, scene, this);
-								break;
 
-						}
+                        //CreateCar(wargs);
+
+						//int x = RandomNumber(1, 4);
+						//switch (x)
+						//{
+						//	case 1:
+								gbcache.CreateSpriteWithNameAt("Ball", Assets.Sprites.Ball, true, wargs, scene, this);
+						//		break;
+						//	case 2:
+						//		gbcache.CreateSpriteWithNameAt("UrhoIcon", Assets.Sprites.UrhoIcon, true, wargs, scene, this);
+						//		break;
+						//	case 3:
+						//		gbcache.CreateSpriteWithNameAt("Cog", Assets.Sprites.Cog, true, wargs, scene, this);
+						//		break;
+
+						//}
                     }
                 }
                 if (pickedNode != null)
@@ -260,6 +270,73 @@ namespace URHO2D.Template
 			}
 			return true;
 		}
+        void CreateCar(Vector2 pos)
+        {
+
+			Node car = scene.CreateChild("Box");
+            car.Scale = new Vector3(4.0f, 1.0f, 0.0f);
+			car.Position = (new Vector3(pos.X, pos.Y, 0.0f));
+			StaticSprite2D boxSprite = car.CreateComponent<StaticSprite2D>();
+            boxSprite.Sprite = ResourceCache.GetSprite2D("Sprites/Box.png");
+			RigidBody2D boxBody = car.CreateComponent<RigidBody2D>();
+            boxBody.BodyType = BodyType2D.Dynamic;
+			boxBody.LinearDamping = 0.0f;
+			boxBody.AngularDamping = 0.0f;
+			CollisionBox2D shape = car.CreateComponent<CollisionBox2D>(); // Create box shape
+			shape.Size = new Vector2(0.32f, 0.32f); // Set size
+			shape.Density = 1.0f; // Set shape density (kilograms per meter squared)
+			shape.Friction = 0.5f; // Set friction
+			shape.Restitution = 0.1f; // Set restitution (slight bounce)
+
+            Node ball1WheelNode = scene.CreateChild("Ball");
+			ball1WheelNode.Position = (new Vector3(pos.X + 0.5f, pos.Y - 0.25f, 0.0f));
+			StaticSprite2D ballSprite = ball1WheelNode.CreateComponent<StaticSprite2D>();
+			ballSprite.Sprite = ResourceCache.GetSprite2D("Sprites/Ball.png");
+			RigidBody2D ballBody = ball1WheelNode.CreateComponent<RigidBody2D>();
+			ballBody.BodyType = BodyType2D.Dynamic;
+			ballBody.LinearDamping = 0.0f;
+			ballBody.AngularDamping = 0.0f;
+			CollisionCircle2D ballShape = ball1WheelNode.CreateComponent<CollisionCircle2D>(); // Create circle shape
+			ballShape.Radius = 0.16f; // Set radius
+			ballShape.Density = 1.0f; // Set shape density (kilograms per meter squared)
+			ballShape.Friction = 0.5f; // Set friction
+			ballShape.Restitution = 0.6f; // Set restitution: make it bounce
+
+			Node ball2WheelNode = scene.CreateChild("Ball");
+			ball2WheelNode.Position = (new Vector3(pos.X - 0.5f, pos.Y - 0.25f, 0.0f));
+			StaticSprite2D ballSprite2 = ball2WheelNode.CreateComponent<StaticSprite2D>();
+			ballSprite2.Sprite = ResourceCache.GetSprite2D("Sprites/Ball.png");
+			RigidBody2D ballBody2 = ball2WheelNode.CreateComponent<RigidBody2D>();
+			ballBody2.BodyType = BodyType2D.Dynamic;
+			ballBody2.LinearDamping = 0.0f;
+			ballBody2.AngularDamping = 0.0f;
+			CollisionCircle2D ballShape2 = ball2WheelNode.CreateComponent<CollisionCircle2D>(); // Create circle shape
+			ballShape2.Radius = 0.16f; // Set radius
+			ballShape2.Density = 1.0f; // Set shape density (kilograms per meter squared)
+			ballShape2.Friction = 0.5f; // Set friction
+			ballShape2.Restitution = 0.6f; // Set restitution: make it bounce
+
+			ConstraintWheel2D wheel1 = car.CreateComponent<ConstraintWheel2D>();
+			wheel1.OtherBody = ball1WheelNode.GetComponent<RigidBody2D>();
+			wheel1.Anchor = ball1WheelNode.Position2D;
+			wheel1.Axis = new Vector2(0.0f, 1.0f);
+			wheel1.MaxMotorTorque = 20.0f;
+			wheel1.FrequencyHz = 4.0f;
+			wheel1.DampingRatio = 0.4f;
+			wheel1.MotorSpeed = 5.0f;
+			wheel1.EnableMotor = true;
+
+			ConstraintWheel2D wheel2 = car.CreateComponent<ConstraintWheel2D>();
+			wheel2.OtherBody = ball2WheelNode.GetComponent<RigidBody2D>();
+			wheel2.Anchor = ball2WheelNode.Position2D;
+			wheel2.Axis = new Vector2(0.0f, 1.0f);
+			wheel2.MaxMotorTorque = 10.0f;
+			wheel2.FrequencyHz = 4.0f;
+			wheel2.DampingRatio = 0.4f;
+			wheel2.MotorSpeed = 5.0f;
+			wheel2.EnableMotor = true;
+        }
+
 		protected override void OnUpdate(float timeStep)
 		{
             if (Input.NumTouches > 1) {
@@ -285,6 +362,9 @@ namespace URHO2D.Template
 		{
 			var renderer = Renderer;
 			renderer.SetViewport(0, new Viewport(Context, scene, CameraNode.GetComponent<Camera>(), null));
+
+			Zone zone = renderer.DefaultZone;
+			zone.FogColor = (new Color(0.1f, 0.1f, 0.1f));
 		}
         async Task<int> CreateScene()
 		{
@@ -319,13 +399,21 @@ namespace URHO2D.Template
 			drawDebug = true;
 
 
-			SVGPhysics svgt = new SVGPhysics(Assets.Terrain.Level06);
+            SVGDataDict svgt = new SVGDataDict(Assets.Terrain.Level06);
 			List<SVGPathPoint> svgTokens = svgt["svgTokens"];
-			CreateSvgTerrain(svgTokens, new Vector2(-2048.0f * Application.PixelSize, -2048.0f * Application.PixelSize));
+			CreateSVGTerrain(svgTokens, new Vector2(-2048.0f * Application.PixelSize, -2048.0f * Application.PixelSize));
+
+
+			//svgt = new SVGDataDict(Assets.Terrain.Rotator);
+			//svgTokens = svgt["svgTokens"];
+			//Node rotr = CreateSvgNode(svgTokens, new Vector2(-16.5f, -16.5f));
+
+
+
 
 			var cache = ResourceCache;
-            Sprite2D boxSprite = cache.GetSprite2D(Assets.Sprites.Box);
-            Sprite2D ballSprite = cache.GetSprite2D(Assets.Sprites.Ball);
+			Sprite2D boxSprite = cache.GetSprite2D(Assets.Sprites.Box);
+			Sprite2D ballSprite = cache.GetSprite2D(Assets.Sprites.Ball);
 
 			for (uint i = 0; i < NumObjects; ++i)
 			{
@@ -381,7 +469,7 @@ namespace URHO2D.Template
             return Task.FromResult(0);
 		}
 
-        void CreateSvgTerrain(List<SVGPathPoint> svgTokens, Vector2 atPosition, string spriteName = "") {
+        void CreateSVGTerrain(List<SVGPathPoint> svgTokens, Vector2 atPosition, string spriteName = "") {
 			Node mainNode = scene.CreateChild("RigidBody");
             mainNode.SetWorldPosition2D(atPosition);
 			Node snode = mainNode.CreateChild("RigidBody");
@@ -402,17 +490,7 @@ namespace URHO2D.Template
 			{
                 SVGPathPoint token = svgTokens[i];
 
-				//Debug.WriteLine($"terraintype: {token.terrainType?.ToString()}");
-
-				//if (token.terrainType.Equals(TerrainType.ROTATING))
-				//{
-				//	TerrainType terType2 = token.terrainType;
-				//	Debug.WriteLine("TerrainType.ROTATING");
-				//}
-				//else
-				//{
-				//	Debug.WriteLine($"terraintype: {token.terrainType?.ToString()}");
-				//}
+				//Debug.WriteLine($"token.CommandType: {token.CommandType}");
 
 				switch (token.CommandType) {
 					case "Z": // Z = closepath
@@ -429,14 +507,12 @@ namespace URHO2D.Template
 							fd.Restitution = 0.2f;
 							fd.Density = 1.0f;
 							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
 							fd.GroupIndex = (short)0;
-
+                            fd.CategoryBits = CB_TERRAIN;
 							Vector2 a = currentPos;
 							Vector2 b = token.vPoint;
 							fd.SetVertices(a, b);
 							currentPos = b;
-                            //Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
                         }
 						break;
 					case "H": // H = horizontal lineto
@@ -447,14 +523,12 @@ namespace URHO2D.Template
 							fd.Restitution = 0.2f;
 							fd.Density = 1.0f;
 							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
 							fd.GroupIndex = (short)0;
-
+                            fd.CategoryBits = CB_TERRAIN;
 							Vector2 a = currentPos;
 							Vector2 b = token.vPoint;
 							fd.SetVertices(a, b);
 							currentPos = b;
-                            //Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
 						}
 						break;
 					case "V": // V = vertical lineto
@@ -465,14 +539,13 @@ namespace URHO2D.Template
 							fd.Restitution = 0.2f;
 							fd.Density = 1.0f;
 							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
+							//fd.CategoryBits = (ushort)1;
+                            fd.CategoryBits = CB_TERRAIN;
 							fd.GroupIndex = (short)0;
-
 							Vector2 a = currentPos;
 							Vector2 b = token.vPoint;
 							fd.SetVertices(a, b);
 							currentPos = b;
-                            //Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
 						}
 						break;
 					case "C": // C = curveto
@@ -480,20 +553,17 @@ namespace URHO2D.Template
                         {
                             for (int si = 0; si < token.vPoints.Count; si ++) {
                                 Vector2 stoken = token.vPoints[si];
-
 								CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
 								fd.Friction = 0.4f;
 								fd.Restitution = 0.2f;
 								fd.Density = 1.0f;
 								fd.MaskBits = (ushort)65535;
-								fd.CategoryBits = (ushort)1;
+                                fd.CategoryBits = CB_TERRAIN;
 								fd.GroupIndex = (short)0;
-
 								Vector2 a = currentPos;
 								Vector2 b = stoken;
 								fd.SetVertices(a, b);
                                 currentPos = b;
-                                //Debug.WriteLine($"SVGPathPoint {stoken.CommandType}: {stoken.vPoint}");
                             }
                         }
 						break;
@@ -503,20 +573,17 @@ namespace URHO2D.Template
 							for (int si = 0; si < token.vPoints.Count; si++)
 							{
 								Vector2 stoken = token.vPoints[si];
-
 								CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
 								fd.Friction = 0.4f;
 								fd.Restitution = 0.2f;
 								fd.Density = 1.0f;
 								fd.MaskBits = (ushort)65535;
-								fd.CategoryBits = (ushort)1;
+                                fd.CategoryBits = CB_TERRAIN;
 								fd.GroupIndex = (short)0;
-
 								Vector2 a = currentPos;
 								Vector2 b = stoken;
 								fd.SetVertices(a, b);
 								currentPos = b;
-                                //Debug.WriteLine($"SVGPathPoint {stoken.CommandType}: {stoken.vPoint}");
 							}
 						}
 						break;
@@ -538,7 +605,7 @@ namespace URHO2D.Template
 							centercircle.Restitution = 0.2f;
 							centercircle.Density = 1.0f;
 							centercircle.MaskBits = (ushort)65535;
-							centercircle.CategoryBits = (ushort)1;
+                            centercircle.CategoryBits = CB_TERRAIN;
 							centercircle.GroupIndex = (short)0;
                         }
                         break;
@@ -552,7 +619,7 @@ namespace URHO2D.Template
 							centercircle.Restitution = 0.2f;
 							centercircle.Density = 1.0f;
 							centercircle.MaskBits = (ushort)65535;
-							centercircle.CategoryBits = (ushort)1;
+                            centercircle.CategoryBits = CB_TERRAIN;
 							centercircle.GroupIndex = (short)0;
 						}
 						break;
@@ -565,277 +632,100 @@ namespace URHO2D.Template
 							box.Friction = 0.5f;
 							box.Restitution = 0.1f;
                             box.SetCenter(ShapeDetails["X"], ShapeDetails["Y"]);
+                            box.CategoryBits = CB_TERRAIN;
 						}
 						break;
-                    case "Rotator": 
-                        {
-                            //Vector2 pos = Vector2.Multiply(atPosition, 0.5f);
-                            //pos = Vector2.Multiply(pos, -1);
-                            Vector2 pos = Vector2.Subtract(Vector2.Add(token.vPoint, atPosition), token.rotatorSize);
-                            //pos = Vector2.Add(pos, token.vPoint);
-                            CreateRotatorTerrain(token.rotatorPoints, pos);
-                        }
-                        break;
+					case "Rotator":
+                        Vector2 pos = Vector2.Add(token.vPoint, atPosition);
+                        CreateSvgNode(token.rotatorPoints, pos);
+						break;
                     default:
                         Debug.WriteLine("default: Unimplemented path command: " + token.CommandType);
                         break;
-                        
 				}
 			}
         }
 
-		void CreateRotatorTerrain(List<SVGPathPoint> svgTokens, Vector2 atPosition)
+		private Node CreateSvgNode(List<SVGPathPoint> svgTokens, Vector2 atPosition)
 		{
-			Node mainNode = scene.CreateChild("RigidBody");
-			mainNode.SetWorldPosition2D(atPosition);
-			Node snode = mainNode.CreateChild("RigidBody");
-            snode.Position = new Vector3(0, 0, 0);
 
-			RigidBody2D centerbody = snode.CreateComponent<RigidBody2D>();
-			//centerbody.BodyType = BodyType2D.Dynamic;
-			//centerbody.FixedRotation = true;
+			Node BaseNode = scene.CreateChild("Box");
+			BaseNode.Position = (new Vector3(atPosition.X, atPosition.Y, 0.0f));
+			//StaticSprite2D boxSprite = BaseNode.CreateComponent<StaticSprite2D>();
+			//boxSprite.Sprite = ResourceCache.GetSprite2D("Sprites/Box.png");
+			RigidBody2D boxBody = BaseNode.CreateComponent<RigidBody2D>();
+            boxBody.BodyType = BodyType2D.Static;
+			boxBody.LinearDamping = 0.0f;
+			boxBody.AngularDamping = 0.0f;
+			CollisionCircle2D baseShape = BaseNode.CreateComponent<CollisionCircle2D>(); // Create circle shape
+			baseShape.Radius = 0.16f; // Set radius
+			baseShape.Density = 1.0f; // Set shape density (kilograms per meter squared)
+			baseShape.Friction = 0.5f; // Set friction
+			baseShape.Restitution = 0.6f; // Set restitution: make it bounce
 
-			//RigidBody2D weldbody = snode.CreateComponent<RigidBody2D>();
-			//weldbody.BodyType = BodyType2D.Static;
-			//for (int i = 0; i < svgTokens.Count; i++)
-    //        {
-				//CustomGeometry geom = snode.CreateComponent<CustomGeometry>();
-				//geom.BeginGeometry(0, PrimitiveType.PointList);
-				//var material = new Material();
-				//material.SetTechnique(0, CoreAssets.Techniques.NoTextureUnlitVCol, 1, 1);
-				//geom.SetMaterial(material);
+			Node RotatorNode = scene.CreateChild("Ball");
+			RotatorNode.Position = (new Vector3(atPosition.X, atPosition.Y, 0.0f));
+			StaticSprite2D ballSprite = RotatorNode.CreateComponent<StaticSprite2D>();
+			ballSprite.Sprite = ResourceCache.GetSprite2D("Sprites/Ball.png");
+			RigidBody2D ballBody = RotatorNode.CreateComponent<RigidBody2D>();
+			ballBody.BodyType = BodyType2D.Dynamic;
+			ballBody.LinearDamping = 0.0f;
+			ballBody.AngularDamping = 0.0f;
 
-				//float size = 3;
-
-				////x
-				//geom.DefineVertex(Vector3.Zero);
-				//geom.DefineColor(Color.Red);
-				//geom.DefineVertex(Vector3.UnitX * size);
-				//geom.DefineColor(Color.Red);
-				////y
-				////geom.DefineVertex(Vector3.Zero);
-				////geom.DefineColor(Color.Green);
-				//geom.DefineVertex(Vector3.UnitY * size);
-				//geom.DefineColor(Color.Green);
-				////z
-				////geom.DefineVertex(Vector3.Zero);
-				////geom.DefineColor(Color.Blue);
-				////geom.DefineVertex(Vector3.UnitZ * size);
-				////geom.DefineColor(Color.Blue);
-
-				//geom.Commit();
-            //}
+			CollisionCircle2D ballShape = RotatorNode.CreateComponent<CollisionCircle2D>(); // Create circle shape
+			ballShape.Radius = 0.16f; // Set radius
+			ballShape.Density = 1.0f; // Set shape density (kilograms per meter squared)
+			ballShape.Friction = 0.5f; // Set friction
+			ballShape.Restitution = 0.6f; // Set restitution: make it bounce
 
 
-			
-
-            ConstraintWeld2D constraintWeld = snode.CreateComponent<ConstraintWeld2D>();
-            constraintWeld.OtherBody = centerbody; //centerbody.GetComponent<RigidBody2D>(); // Constrain ball to box
-            constraintWeld.Anchor = atPosition;
-			constraintWeld.FrequencyHz = 4.0f;
-			constraintWeld.DampingRatio = 0.5f;
-
-			//ConstraintRevolute2D constraintRevolute = snode.CreateComponent<ConstraintRevolute2D>(); // Apply constraint to box
-			//constraintRevolute.OtherBody = mainNode.GetComponent<RigidBody2D>(); // Constrain ball to box
-			//constraintRevolute.Anchor = new Vector2(-1.0f, 1.5f);
-			//constraintRevolute.LowerAngle = -1.0f; // In radians
-			//constraintRevolute.UpperAngle = 0.5f; // In radians
-            //constraintRevolute.EnableLimit = false;
-			//constraintRevolute.MaxMotorTorque = 10.0f;
-			//constraintRevolute.MotorSpeed = 0.25f;
-			//constraintRevolute.EnableMotor = true;
+            List<Vector2> vertices = new List<Vector2>();
 
 
+			float minX = float.MaxValue;
+            float maxX = 0f;
+            float minY = float.MaxValue;
+            float maxY = 0f;
+            for (int i = 0; i < svgTokens.Count; i++)
+            {
+                minX = Math.Min(svgTokens[i].vPoint.X, minX);
+				maxX = Math.Max(svgTokens[i].vPoint.X, maxX);
+				minY = Math.Min(svgTokens[i].vPoint.Y, minY);
+				maxY = Math.Max(svgTokens[i].vPoint.Y, maxY);
+            }
+			Vector2 center = new Vector2(((maxX * 0.5f) + (minX * 0.5f)), ((maxY * 0.5f) + (minY * 0.5f)));
+            for (int i = 0; i < svgTokens.Count; i++)
+            {
+                if(svgTokens[i].CommandType == "L" || svgTokens[i].CommandType == "l") {
+                    vertices.Add(Vector2.Subtract(center, svgTokens[i].vPoint));
+                }
+            }
 
+			Polygon pgon = new Polygon(vertices.ToArray());
+			List<Triangle> triangles = pgon.Triangulate();
 
+            foreach(Triangle tri in triangles) {
+				CollisionPolygon2D polygonShape = RotatorNode.CreateComponent<CollisionPolygon2D>();
+				polygonShape.VertexCount = 3;
+                polygonShape.SetVertex(0, tri.Points[0]);
+                polygonShape.SetVertex(1, tri.Points[1]);
+                polygonShape.SetVertex(2, tri.Points[2]);
+				polygonShape.Density = 3.0f;
+				polygonShape.Friction = 0.2f;
+				polygonShape.Restitution = 0.0f;
+				polygonShape.MaskBits = k_allButTerrainMaskBits;
+            }
 
-			Vector2 currentPos = svgTokens[0].vPoint;
-			for (int i = 0; i < svgTokens.Count; i++)
-			{
-				SVGPathPoint token = svgTokens[i];
-
-				//Debug.WriteLine($"terraintype: {token.terrainType?.ToString()}");
-
-				//if (token.terrainType.Equals(TerrainType.ROTATING))
-				//{
-				//  TerrainType terType2 = token.terrainType;
-				//  Debug.WriteLine("TerrainType.ROTATING");
-				//}
-				//else
-				//{
-				//  Debug.WriteLine($"terraintype: {token.terrainType?.ToString()}");
-				//}
-
-				switch (token.CommandType)
-				{
-					case "Z": // Z = closepath
-					case "z":
-						break;
-					case "M": // M = moveto
-					case "m":
-						currentPos = token.vPoint;
-						break;
-					case "L": // L = lineto
-					case "l":
-						{
-							CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
-							fd.Friction = 0.4f;
-							fd.Restitution = 0.2f;
-							fd.Density = 1.0f;
-							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
-							fd.GroupIndex = (short)0;
-
-							Vector2 a = currentPos;
-							Vector2 b = token.vPoint;
-							fd.SetVertices(a, b);
-							currentPos = b;
-							//Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
-						}
-						break;
-					case "H": // H = horizontal lineto
-					case "h":
-						{
-							CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
-							fd.Friction = 0.4f;
-							fd.Restitution = 0.2f;
-							fd.Density = 1.0f;
-							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
-							fd.GroupIndex = (short)0;
-
-							Vector2 a = currentPos;
-							Vector2 b = token.vPoint;
-							fd.SetVertices(a, b);
-							currentPos = b;
-							//Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
-						}
-						break;
-					case "V": // V = vertical lineto
-					case "v":
-						{
-							CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
-							fd.Friction = 0.4f;
-							fd.Restitution = 0.2f;
-							fd.Density = 1.0f;
-							fd.MaskBits = (ushort)65535;
-							fd.CategoryBits = (ushort)1;
-							fd.GroupIndex = (short)0;
-
-							Vector2 a = currentPos;
-							Vector2 b = token.vPoint;
-							fd.SetVertices(a, b);
-							currentPos = b;
-							//Debug.WriteLine($"SVGPathPoint {token.CommandType}: {token.vPoint}");
-						}
-						break;
-					case "C": // C = curveto
-					case "c":
-						{
-							for (int si = 0; si < token.vPoints.Count; si++)
-							{
-								Vector2 stoken = token.vPoints[si];
-
-								CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
-								fd.Friction = 0.4f;
-								fd.Restitution = 0.2f;
-								fd.Density = 1.0f;
-								fd.MaskBits = (ushort)65535;
-								fd.CategoryBits = (ushort)1;
-								fd.GroupIndex = (short)0;
-
-								Vector2 a = currentPos;
-								Vector2 b = stoken;
-								fd.SetVertices(a, b);
-								currentPos = b;
-								//Debug.WriteLine($"SVGPathPoint {stoken.CommandType}: {stoken.vPoint}");
-							}
-						}
-						break;
-					case "S": // S = smooth curveto
-					case "s":
-						{
-							for (int si = 0; si < token.vPoints.Count; si++)
-							{
-								Vector2 stoken = token.vPoints[si];
-
-								CollisionEdge2D fd = snode.CreateComponent<CollisionEdge2D>();
-								fd.Friction = 0.4f;
-								fd.Restitution = 0.2f;
-								fd.Density = 1.0f;
-								fd.MaskBits = (ushort)65535;
-								fd.CategoryBits = (ushort)1;
-								fd.GroupIndex = (short)0;
-
-								Vector2 a = currentPos;
-								Vector2 b = stoken;
-								fd.SetVertices(a, b);
-								currentPos = b;
-								//Debug.WriteLine($"SVGPathPoint {stoken.CommandType}: {stoken.vPoint}");
-							}
-						}
-						break;
-					case "Q": // Q = quadratic Bézier curve
-					case "q":
-					case "T": // T = smooth quadratic Bézier curveto
-					case "t":
-					case "A": // A = elliptical Arc
-					case "a":
-						Debug.WriteLine("TODO: Unimplemented path command: " + token.CommandType);
-						break;
-					case "ellipse":
-						{
-							Dictionary<string, float> ShapeDetails = token.ShapeDetails;
-							CollisionCircle2D centercircle = snode.CreateComponent<CollisionCircle2D>();
-							centercircle.SetCenter(ShapeDetails["X"], ShapeDetails["Y"]);
-							centercircle.Radius = ShapeDetails["width"];
-							centercircle.Friction = 0.4f;
-							centercircle.Restitution = 0.2f;
-							centercircle.Density = 1.0f;
-							centercircle.MaskBits = (ushort)65535;
-							centercircle.CategoryBits = (ushort)1;
-							centercircle.GroupIndex = (short)0;
-						}
-						break;
-					case "circle":
-						{
-							Dictionary<string, float> ShapeDetails = token.ShapeDetails;
-							CollisionCircle2D centercircle = snode.CreateComponent<CollisionCircle2D>();
-							centercircle.SetCenter(ShapeDetails["X"], ShapeDetails["Y"]);
-							centercircle.Radius = ShapeDetails["radius"];
-							centercircle.Friction = 0.4f;
-							centercircle.Restitution = 0.2f;
-							centercircle.Density = 1.0f;
-							centercircle.MaskBits = (ushort)65535;
-							centercircle.CategoryBits = (ushort)1;
-							centercircle.GroupIndex = (short)0;
-						}
-						break;
-					case "rect":
-						{
-							Dictionary<string, float> ShapeDetails = token.ShapeDetails;
-							CollisionBox2D box = snode.CreateComponent<CollisionBox2D>();
-							box.Size = new Vector2(ShapeDetails["width"], ShapeDetails["height"]);
-							box.Density = 1.0f;
-							box.Friction = 0.5f;
-							box.Restitution = 0.1f;
-							box.SetCenter(ShapeDetails["X"], ShapeDetails["Y"]);
-						}
-						break;
-					case "Rotator":
-						{
-
-						}
-						break;
-					default:
-						Debug.WriteLine("default: Unimplemented path command: " + token.CommandType);
-						break;
-
-				}
-			}
+			ConstraintRevolute2D constraintRevolute = BaseNode.CreateComponent<ConstraintRevolute2D>();
+			constraintRevolute.OtherBody = RotatorNode.GetComponent<RigidBody2D>(); 
+			constraintRevolute.Anchor = RotatorNode.Position2D; 
+			constraintRevolute.EnableLimit = false;
+			constraintRevolute.MaxMotorTorque = float.MaxValue;
+			constraintRevolute.MotorSpeed = -0.5f;
+			constraintRevolute.EnableMotor = true;
+			return BaseNode;
 		}
-
-        void OnPinchUpdated(GestureInputEventArgs e)
+		void OnPinchUpdated(GestureInputEventArgs e)
         {
             var x = e;
             if (e.NumFingers > 1)
@@ -844,33 +734,11 @@ namespace URHO2D.Template
                 TouchState touch2 = Input.GetTouch((uint)1);
             }
         }
-
-		void Input_GestureRecorded(GestureRecordedEventArgs e)
-		{
-			var x = e;
-
-		}
-
-        void AddSoftbodyAt(Vector2 pos)
-		{
-            RotatingSawDef def = new RotatingSawDef();
-			def.numParts = 10; 
-			def.radius = 0.5f;
-            def.center = pos; 
-			def.softness = 0.15f; 
-            RotatingSaw body = new RotatingSaw(scene, def);
-            scene.AddComponent(body);
-
-		}
-
-
-
         Vector2 TouchToWorldPosition(TouchEndEventArgs args) {
 			PhysicsWorld2D physicsWorld = scene.GetComponent<PhysicsWorld2D>();
 			var graphics = Graphics;
             return new Vector3(camera.ScreenToWorldPoint(new Vector3((float)args.X / graphics.Width, (float)args.Y / graphics.Height, 0.0f))).Xy;
         }
-
         void ResourceCache_ResourceNotFound(Urho.Resources.ResourceNotFoundEventArgs obj)
         {
             var ff = obj;

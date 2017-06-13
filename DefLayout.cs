@@ -54,7 +54,6 @@ namespace URHO2D.Template
 		static DefLayout()
 		{
 			//Urho.Application.UnhandledException += Application_UnhandledException1;
-
 		}
 
 		static void Application_UnhandledException1(object sender, UnhandledExceptionEventArgs e)
@@ -140,38 +139,6 @@ namespace URHO2D.Template
 			{
 				Camera camera = CameraNode.GetComponent<Camera>();
 				camera.Zoom = camera.Zoom * 0.99f;
-			}
-		}
-
-		protected void MoveCameraByTouches()
-		{
-			if (!TouchEnabled || CameraNode == null)
-				return;
-
-			var input = Input;
-			for (uint i = 0, num = input.NumTouches; i < num; ++i)
-			{
-				TouchState state = input.GetTouch(i);
-				if (state.TouchedElement != null)
-					continue;
-
-				if (state.Delta.X != 0 || state.Delta.Y != 0)
-				{
-					var camera = CameraNode.GetComponent<Camera>();
-					if (camera == null)
-						return;
-
-					var graphics = Graphics;
-					Yaw += TouchSensitivity * camera.Fov / graphics.Height * state.Delta.X;
-					Pitch += TouchSensitivity * camera.Fov / graphics.Height * state.Delta.Y;
-					CameraNode.Rotation = new Quaternion(Pitch, Yaw, 0);
-				}
-				else
-				{
-					var cursor = UI.Cursor;
-					if (cursor != null && cursor.Visible)
-						cursor.Position = state.Position;
-				}
 			}
 		}
 

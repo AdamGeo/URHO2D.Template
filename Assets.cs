@@ -83,6 +83,8 @@ namespace URHO2D.Template
             public const string Level04 = "Terrain.Level04.svg";
             public const string Level05 = "Terrain.Level05.svg";
             public const string Level06 = "Terrain.Level06.svg";
+
+            public const string Rotator = "Terrain.rotator.svg";
 		}
 	}
 }

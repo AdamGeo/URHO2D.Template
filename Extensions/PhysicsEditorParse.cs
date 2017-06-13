@@ -297,8 +297,8 @@ namespace URHO2D.Template
                         var v = shapeData.vertices.ElementAt((int)i);
                         polygonShape.SetVertex(i, v);
                     }
-                    polygonShape.Density =shapeData.density; 
-					polygonShape.Friction = shapeData.friction; 
+                    polygonShape.Density =shapeData.density;
+                    polygonShape.Friction = shapeData.friction; 
                     polygonShape.Restitution = shapeData.restitution;
                     polygonShape.CategoryBits = shapeData.categoryBits;
 					polygonShape.MaskBits = shapeData.maskBits;
@@ -308,9 +308,9 @@ namespace URHO2D.Template
 				{
 					CollisionCircle2D circle = node.CreateComponent<CollisionCircle2D>();
                     circle.Radius = shapeData.radius;
-					circle.Density = shapeData.density;
-                    circle.Friction = shapeData.friction;
-                    circle.Restitution = shapeData.restitution;
+                    circle.Density = 0.1f; //shapeData.density;
+                    circle.Friction = 0.0f; //shapeData.friction;
+					circle.Restitution = shapeData.restitution;
 					circle.CategoryBits = shapeData.categoryBits;
 					circle.MaskBits = shapeData.maskBits;
 					circle.GroupIndex = shapeData.groupIndex;

@@ -32,12 +32,13 @@
     <Compile Include="DefLayout.cs" />
     <Compile Include="StartMenu.cs" />
     <Compile Include="Assets.cs" />
-    <Compile Include="RotatingSaw.cs" />
     <Compile Include="Extensions\DoubleExtensions.cs" />
     <Compile Include="Extensions\PhysicsEditorParse.cs" />
     <Compile Include="Extensions\XmlExtensions.cs" />
     <Compile Include="Extensions\PList.cs" />
-    <Compile Include="Extensions\SVGPhysics.cs" />
+    <Compile Include="Extensions\SVGDataDict.cs" />
+    <Compile Include="Extensions\Polygon.cs" />
+    <Compile Include="Extensions\Triangle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
@@ -59,6 +60,7 @@
     <EmbeddedResource Include="Terrain\Level04.svg" />
     <EmbeddedResource Include="Terrain\Level05.svg" />
     <EmbeddedResource Include="Terrain\Level06.svg" />
+    <EmbeddedResource Include="Terrain\rotator.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
